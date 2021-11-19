@@ -2144,6 +2144,7 @@ void te_playerattachment(CBasePlayer@ target, float vOffset=51.0f,
 			m_fNextShoutTakeCover = g_Engine.time + Math.RandomFloat( 20.0f, 40.0f );
 			m_fNextShout = g_Engine.time + 3.0f;
 
+			g_Game.PrecacheGeneric("sprites/grenade.spr");
 			PlayerAttachment("sprites/grenade.spr");
 
 			g_SoundSystem.EmitSound( m_pPlayer.edict(), CHAN_BODY, "speech/grenade1.wav", 1, ATTN_NORM ); 
@@ -2157,6 +2158,7 @@ void te_playerattachment(CBasePlayer@ target, float vOffset=51.0f,
 			m_fNextShoutMedic = g_Engine.time + Math.RandomFloat( 20.0f, 40.0f );
 			m_fNextShout = g_Engine.time + 3.0f;
 			
+			g_Game.PrecacheGeneric("sprites/saveme.spr");
 			PlayerAttachment("sprites/saveme.spr");
 
 			g_SoundSystem.EmitSound( m_pPlayer.edict(), CHAN_BODY, "speech/saveme1.wav", 1, ATTN_NORM ); 
