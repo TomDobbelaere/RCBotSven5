@@ -21,6 +21,8 @@
 	final class BotProfiles
 	{
 		array<BotProfile@> m_Profiles;
+		array<string> modelNames;
+		array<string> botNames;
 		
 		BotProfiles()
 		{
@@ -33,17 +35,51 @@
 			int botSensitivity;
 			string botModel;
 
+			File@ modelNamesFile = g_FileSystem.OpenFile( "scripts/plugins/BotManager/profiles/models.txt", OpenFile::READ);
+			if (modelNamesFile !is null) {
+				while (!modelNamesFile.EOFReached()) {
+					string fileLine; modelNamesFile.ReadLine(fileLine);
+					g_Game.AlertMessage( at_console, "Custom model name: " );
+					g_Game.AlertMessage( at_console, fileLine );
+					g_Game.AlertMessage( at_console, "\n" );
+					modelNames.insertLast(fileLine);
+				}
+			}
+
+			File@ botNamesFile = g_FileSystem.OpenFile( "scripts/plugins/BotManager/profiles/names.txt", OpenFile::READ);
+			if (botNamesFile !is null) {
+				while (!botNamesFile.EOFReached()) {
+					string fileLine; botNamesFile.ReadLine(fileLine);
+					g_Game.AlertMessage( at_console, "Custom bot name: " );
+					g_Game.AlertMessage( at_console, fileLine );
+					g_Game.AlertMessage( at_console, "\n" );
+					botNames.insertLast(fileLine);
+				}
+			}
+
 			for ( uint i = 1; i < MAX_PROFILES; i ++ )
 			{
 				File@ profileFile = g_FileSystem.OpenFile( "scripts/plugins/BotManager/profiles/" + i + ".ini", OpenFile::READ);
-				if ( profileFile is null )
-					continue;
 
+				
 				botName = "Unnamed";
 				botSensitivity = Math.RandomLong( 1, 4 );
 				botModel = "freeman";
+				if ( profileFile is null ) {
+					if (modelNames.length() > 0) {
+						g_Game.AlertMessage( at_console, "Model names length:" );
+						g_Game.AlertMessage( at_console, modelNames.length() );
+						botModel = modelNames[Math.RandomLong(0, modelNames.length() - 1)];
+					}
 
-				while ( !profileFile.EOFReached() )
+					if (botNames.length() > 0) {
+						g_Game.AlertMessage( at_console, "Bot names length:" );
+						g_Game.AlertMessage( at_console, botNames.length() );
+						botName = botNames[Math.RandomLong(0, botNames.length() - 1)];
+					}
+				}
+
+				while ( profileFile !is null && !profileFile.EOFReached() )
 				{
 					string fileLine; profileFile.ReadLine( fileLine );
 					if ( fileLine[0] == "#" )
@@ -68,7 +104,8 @@
 						botModel = args[1];
 				}
 
-				profileFile.Close();
+				if (profileFile !is null)
+					profileFile.Close();
 
 				m_Profiles.insertLast(BotProfile(botName, botSensitivity, botModel));
 			}

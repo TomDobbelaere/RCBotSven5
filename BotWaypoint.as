@@ -717,6 +717,7 @@ class CWaypoints
 	uint m_iMoveWaypointIndex = 0;
 	bool m_bMoveWaypointValid = false;
 	AutoWaypointer@ autoWaypointer = null;
+	AutoWaypointer@ autoWaypointer2 = null;
 	CWaypointVisibility@ m_VisibilityTable = null;
 
 	CWaypoint@ getWaypointAtIndex ( uint idx )
@@ -1393,6 +1394,7 @@ class CWaypoints
 
 		// clear the auto waypointer
 		@autoWaypointer = null;
+		@autoWaypointer2 = null;
 
 		filename += ".rcwa";		
 
@@ -1525,10 +1527,16 @@ class CWaypoints
 
 	void AutoWaypoint ( CBasePlayer@ player )
 	{
-		if ( player !is null )
-			@autoWaypointer = AutoWaypointer(player);
-		else 
+		if (player is null) {
 			@autoWaypointer = null;
+			@autoWaypointer2 = null;
+		} else {
+			if (autoWaypointer is null) {
+					@autoWaypointer = AutoWaypointer(player);
+			} else {
+					@autoWaypointer2 = AutoWaypointer(player);
+			}
+		}
 	}
 
 	void Think ( )
@@ -1541,6 +1549,11 @@ class CWaypoints
 		if ( autoWaypointer !is null )
 		{
 			autoWaypointer.Think();
+		}
+
+		if ( autoWaypointer2 !is null )
+		{
+			autoWaypointer2.Think();
 		}
 	}
 
