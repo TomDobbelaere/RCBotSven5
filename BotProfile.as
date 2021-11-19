@@ -23,6 +23,7 @@
 		array<BotProfile@> m_Profiles;
 		array<string> modelNames;
 		array<string> botNames;
+		uint lastBotNameIndex;
 		
 		BotProfiles()
 		{
@@ -34,6 +35,7 @@
 			string botName;
 			int botSensitivity;
 			string botModel;
+			lastBotNameIndex = 0;
 
 			File@ modelNamesFile = g_FileSystem.OpenFile( "scripts/plugins/BotManager/profiles/models.txt", OpenFile::READ);
 			if (modelNamesFile !is null) {
@@ -75,7 +77,12 @@
 					if (botNames.length() > 0) {
 						g_Game.AlertMessage( at_console, "Bot names length:" );
 						g_Game.AlertMessage( at_console, botNames.length() );
-						botName = botNames[Math.RandomLong(0, botNames.length() - 1)];
+						botName = botNames[lastBotNameIndex];
+						lastBotNameIndex += 1;
+
+						if (lastBotNameIndex == botNames.length()) {
+							lastBotNameIndex = 0;
+						}
 					}
 				}
 
