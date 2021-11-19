@@ -102,9 +102,6 @@ void MapInit()
 	g_BotCam.Clear(true);
 	g_MapInit = true;
 
-	// crash fix
-	g_Game.PrecacheGeneric("sprites/saveme.spr");
-	g_Game.PrecacheGeneric("sprites/grenade.spr");
 	// need this for camera
 	g_Game.PrecacheModel("models/mechgibs.mdl");
 	// need this for waypoint sounds
