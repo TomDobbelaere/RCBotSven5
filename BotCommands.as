@@ -102,6 +102,10 @@ void MapInit()
 	g_BotCam.Clear(true);
 	g_MapInit = true;
 
+	g_Game.PrecacheGeneric("sprites/rcbotgrenade.spr");
+	g_Game.PrecacheModel("sprites/rcbotgrenade.spr");
+	g_Game.PrecacheGeneric("sprites/rcbotsaveme.spr");
+	g_Game.PrecacheModel("sprites/rcbotsaveme.spr");
 	// need this for camera
 	g_Game.PrecacheModel("models/mechgibs.mdl");
 	// need this for waypoint sounds
