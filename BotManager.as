@@ -96,8 +96,8 @@ final class RCBot : BotManager::BaseBot
 	Vector m_vLadderVector;
 
 	float m_fNextTalkTime = 0.0f;
-	float m_fNextTalkTimeMin = 1.0f;
-	float m_fNextTalkTimeMax = 2.0f;
+	float m_fNextTalkTimeMin = 10.0f;
+	float m_fNextTalkTimeMax = 120.0f;
 	array<string> chatterMessages;
 	
 	void setFollowingNPC ( CBaseEntity@ NPC )
