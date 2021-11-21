@@ -95,6 +95,11 @@ final class RCBot : BotManager::BaseBot
 
 	Vector m_vLadderVector;
 
+	float m_fNextTalkTime = 0.0f;
+	float m_fNextTalkTimeMin = 1.0f;
+	float m_fNextTalkTimeMax = 2.0f;
+	array<string> chatterMessages;
+	
 	void setFollowingNPC ( CBaseEntity@ NPC )
 	{
 		m_pFollowingNPC = NPC;
@@ -189,6 +194,19 @@ final class RCBot : BotManager::BaseBot
 		super( pPlayer );
 
 		init = false;
+
+		File@ chatterFile = g_FileSystem.OpenFile( "scripts/plugins/BotManager/profiles/chatter.txt", OpenFile::READ);
+		if (chatterFile !is null) {
+			while (!chatterFile.EOFReached()) {
+				string fileLine; chatterFile.ReadLine(fileLine);
+
+				if (fileLine.StartsWith("#") || fileLine.IsEmpty()) {
+					continue;
+				}
+
+				chatterMessages.insertLast(fileLine);
+			}
+		}
 
 		@m_pVisibles = CBotVisibles(this);
 
@@ -1710,8 +1728,7 @@ case 	CLASS_BARNACLE	:*/
 		DoWeapons(); // update weapon/attack commands
 		DoButtons(); // update button presses
 
-		
-		
+		DoTalk(); // random text chatter
 	}
 	
 	float m_fNumTasks = 0;
@@ -1884,6 +1901,7 @@ case 	CLASS_BARNACLE	:*/
 		@m_pNextWpt = null;
 		m_fClearAvoidTime = 0.0;
 		m_fTaskFailTime = g_Engine.time + 10.0f;
+		m_fNextTalkTime = g_Engine.time + Math.RandomFloat(m_fNextTalkTimeMin, m_fNextTalkTimeMax);
 		m_fNumTasks = 0;
 		m_fNumTasksFailed = 0;
 
@@ -2409,6 +2427,34 @@ void te_playerattachment(CBasePlayer@ target, float vOffset=51.0f,
 		}
 
 		m_iCurrentPriority = PRIORITY_NONE;
+	}
+
+	// Liam
+	void DoTalk() {
+		if (m_fNextTalkTime < g_Engine.time) {
+			if (chatterMessages.length() > 0) {
+				array<string> connectedPlayers;
+				for(int iPlayer = 1; iPlayer <= g_Engine.maxClients; ++iPlayer)
+				{
+					CBasePlayer@ pPlayer = g_PlayerFuncs.FindPlayerByIndex(iPlayer);
+
+					if (pPlayer is null || pPlayer == m_pPlayer ) {
+						continue;
+					}
+
+					connectedPlayers.insertLast(pPlayer.pev.netname);
+				}
+
+				string randomChatterMessage = chatterMessages[Math.RandomLong(0, chatterMessages.length() - 1)];
+				string randomPlayer = connectedPlayers[Math.RandomLong(0, connectedPlayers.length() - 1)];
+				randomChatterMessage = randomChatterMessage.Replace("%randplayer", randomPlayer);
+				randomChatterMessage = randomChatterMessage.Replace("%mapname", g_Engine.mapname);
+
+				Say(randomChatterMessage);
+			}
+
+			m_fNextTalkTime = g_Engine.time + Math.RandomFloat(m_fNextTalkTimeMin, m_fNextTalkTimeMax);
+		}
 	}
 }
 

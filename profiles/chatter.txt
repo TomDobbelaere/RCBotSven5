@@ -1,0 +1,7 @@
+# comments like these are ignored
+%randplayer sucks ass
+go go go, %randplayer!
+%mapname sucks ass
+
+
+
