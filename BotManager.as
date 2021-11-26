@@ -705,9 +705,7 @@ final class RCBot : BotManager::BaseBot
 			if ( pBestWeapon is null ) 
 				return false;
 		}
-
-		//BotMessage(szClassname);
-
+		
 		if ( szClassname == "func_breakable" )
 			return BreakableIsEnemy(entity);
 
@@ -738,7 +736,8 @@ final class RCBot : BotManager::BaseBot
 		if ( szClassname == "monster_gargantua" )
 			return !entity.IsPlayerAlly();
 
-		if ( (entity.pev.flags & FL_MONSTER) == FL_MONSTER )
+		if (true)
+		//if ( (entity.pev.flags & FL_MONSTER) == FL_MONSTER )
 		{
 
 				//http://www.svencoop.com/manual/classes.html
@@ -746,8 +745,9 @@ final class RCBot : BotManager::BaseBot
 		{
 case 	CLASS_FORCE_NONE	:
 case 	CLASS_NONE	:
-case 	CLASS_PLAYER	:
-
+	if ( szClassname == "player") {
+		return true;
+	}
 case 	CLASS_ALIEN_PASSIVE	:
 case 	CLASS_PLAYER_BIOWEAPON	:
 	return false; // ignore
@@ -776,6 +776,7 @@ case 	CLASS_ALIEN_PREY	:
 case 	CLASS_ALIEN_PREDATOR	:
 case 	CLASS_XRACE_PITDRONE	:
 case 	CLASS_XRACE_SHOCK	:
+case 	CLASS_PLAYER	:
 case 	CLASS_BARNACLE	:
 
 		if ( szClassname == "monster_turret" || szClassname == "monster_miniturret" )
