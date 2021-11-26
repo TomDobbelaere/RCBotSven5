@@ -739,18 +739,15 @@ final class RCBot : BotManager::BaseBot
 		if (true)
 		//if ( (entity.pev.flags & FL_MONSTER) == FL_MONSTER )
 		{
-
 				//http://www.svencoop.com/manual/classes.html
 				switch ( entity.Classify() )
 		{
 case 	CLASS_FORCE_NONE	:
 case 	CLASS_NONE	:
-	if ( szClassname == "player") {
-		return true;
-	}
 case 	CLASS_ALIEN_PASSIVE	:
 case 	CLASS_PLAYER_BIOWEAPON	:
 	return false; // ignore
+case 	CLASS_PLAYER	:
 case 	CLASS_PLAYER_ALLY	:
 case 	CLASS_HUMAN_PASSIVE	:
 	return false; // ally
@@ -776,7 +773,14 @@ case 	CLASS_ALIEN_PREY	:
 case 	CLASS_ALIEN_PREDATOR	:
 case 	CLASS_XRACE_PITDRONE	:
 case 	CLASS_XRACE_SHOCK	:
-case 	CLASS_PLAYER	:
+case 	CLASS_TEAM1 :
+case	CLASS_TEAM2 :
+case 	CLASS_TEAM3 :
+case 	CLASS_TEAM4 :
+	if (m_pPlayer.Classify() != entity.Classify()) {
+		return true;
+	}
+	return false;
 case 	CLASS_BARNACLE	:
 
 		if ( szClassname == "monster_turret" || szClassname == "monster_miniturret" )
